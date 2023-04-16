@@ -58,11 +58,7 @@ client.on('ready', () => {
 
 client.on('messageCreate', (message) => {
     if (message.author.bot) return; // Check if the author is a bot
-
-    if (!(channelIds.includes(message.channel.id) || channelNames.includes(message.channel.name))) {
-        console.log('Invalid Channel');
-        return;
-    }
+    
     // Check if the current hour has changed since the last message was sent
     if (new Date().getHours() != hour) {
         messageCount = 0; // reset the message count
@@ -91,8 +87,7 @@ client.on('messageCreate', (message) => {
         'fungus farm download',
         'farm download',
         'anybody got that',
-        'where download',
-
+        'where download'
     ];
 
     const otherPhrases = [
