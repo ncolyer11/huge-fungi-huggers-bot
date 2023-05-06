@@ -58,29 +58,40 @@ client.on('ready', () => {
 
 // Define an array of possible welcome messages with different rarities
 const welcomeMessages = [
-  "Welcome to Huge Fungi Huggers, {member}! We're so glad you're here.",
-  "Hey {member}, welcome to the server! Enjoy all the free wood here.",
-  "Greetings, {member}! Enjoy your time collecting shroomlights here.",
-  "Howdy {member}! We hope you brought spare nylium.",
-  "Hello {member}, welcome to the other tree server! How's your day going?",
-  "Welcome, {member}! Hope you find what you're looking for here! (I really don't know how you couldn't)",
-  "Howdy {member}, did you know {archive} has all the nether tree farms you could dream of?",
-  "Yo, {member}! Welcome to the Huge Fungi Huggers server, feel free to ask if you need help with anything.",
-  "Welcome to Huge Fungi Huggers, {member}! We're happy to have you here. Have a great time exploring the nether trees.",
-  "Hi {member}, did you know {message.guild.channels.cache.find(channel => channel.name === 'archive')} has some awesome designs made by our community? Feel free to check them out!",
-  "Yo, {member}! Welcome to Huge Fungi Huggers, where we have some of the nether tree farms around. Enjoy your stay!",
-  "Welcome to the server, {member}! We hope you find everything you're looking for this side of the overworld.",
-  "Greetings, {member}! Our community is always happy to welcome new members to our nether tree paradise.",
-  "Welcome to Huge Fungi Huggers, {member}! Our trees may be on fire, but our community is always cool.",
-  "Hey {member}, welcome to the nether tree gang! Let's chop it up and make some charcoal. Oh wait...",
-  "Who’s that, hiding in the nether roots? Oh! It’s {member}. Welcome to the server."
+  "Welcome to Huge Fungi Huggers, {member}! We're so glad you're here.", // 1
+  "Hey {member}, welcome to the server! Enjoy all the free wood here.", // 2
+  "Greetings, {member}! Enjoy your time collecting shroomlights here.", // 3
+  "Howdy {member}! We hope you brought spare nylium.", // 4
+  "Hello {member}, welcome to the other tree server! How's your day going?", // 5
+  "Welcome, {member}! Hope you find what you're looking for here! (I really don't know how you couldn't)", // 6
+  "Howdy {member}, did you know {archive} has all the nether tree farms you could dream of?", // 7
+  "Yo, {member}! Welcome to the Huge Fungi Huggers server, feel free to ask if you need help with anything.", // 8
+  "Welcome to Huge Fungi Huggers, {member}! We're happy to have you here. Have a great time exploring the nether trees.", // 9
+  "Hi {member}, did you know {archive} has some awesome designs made by our community? Feel free to check them out!", // 10
+  "Yo, {member}! Welcome to Huge Fungi Huggers, where we have some of the nether tree farms around. Enjoy your stay!", // 11
+  "Welcome to the server, {member}! We hope you find everything you're looking for this side of the overworld.", // 12
+  "Greetings, {member}! Our community is always happy to welcome new members to our nether tree paradise.", // 13
+  "Welcome to Huge Fungi Huggers, {member}! Our trees may be on fire, but our community is always cool.", // 14
+  "Hey {member}, welcome to the nether tree gang! Let's chop it up and make some charcoal. Oh wait...", // 15
+  "Who’s that, hiding in the nether roots? Oh! It’s {member}. Welcome to the server.", // 16
+  "{member} has joined the server, I wonder if they know about all the schematics in {archive}...", // 17
+  "{member} just slid into some twisting vines.", // 18
+  "Welcome {member}, enjoy your stay!", // 19
+  "Happy you're here, {member}!", // 20
+  "Hey {member}, welcome aboard!", // 21
+  "Welcome to the Huge Fungi Huggers community, {member}!", // 22
+  "Hello {member}, welcome to our server!", // 23
+  "Welcome {member}, Have fun exploring {archive}.", // 24
+  "We're happy to have you, {member}!", // 25
+  "Greetings, {member}! Welcome to our server!", // 26
+  "Welcome to the server, {member}! Enjoy yourself!", // 27
 ];
 
 const joinMessages = new Map(); // Create a map to store the last join message for each member
 let lastMessageIndex; // Create a variable to store the index of the last welcome message sent
 
 // Define an array of integers representing the relative rarities of each welcome message
-const messageRarities = [7, 6, 3, 3, 1, 2, 6, 4, 4, 2, 3, 3, 6, 5, 1, 3];
+const messageRarities = [7, 6, 3, 3, 1, 2, 6, 4, 4, 2, 3, 3, 6, 3, 1, 2, 2, 8, 9, 5, 2, 6, 7, 3, 4, 6];
 
 
 client.on('guildMemberAdd', (member) => {
@@ -91,9 +102,10 @@ client.on('guildMemberAdd', (member) => {
         messageIndex = weightedRandomIndex(messageRarities);
     }
 
+    const archiveChannel = '1019870085617291305'
+
     const message = welcomeMessages[messageIndex];
-    const welcomeMessage = `${message}`.replace('{member}', `<@${member.id}>`);
-    welcomeMessage = `${message}`.replace('{archive}', `<@${message.guild.channels.cache.find(channel => channel.name === 'archive')}>`);
+    const welcomeMessage = `${message}`.replace('{member}', `<@${member.id}>`).replace('{archive}', `<#${archiveChannel}>`);
     const sentMessage = member.guild.systemChannel.send(welcomeMessage);
 
     joinMessages.set(member.id, sentMessage);
@@ -172,4 +184,4 @@ client.on('messageCreate', (message) => {
     }
 });
 
-client.login('MY-TOKEN');
+client.login('MY-TOKEN);
