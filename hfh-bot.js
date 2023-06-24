@@ -1,97 +1,10 @@
-const HOURLY_MSG_LIMIT = 25;
-const Discord = require('discord.js');
-const client = new Discord.Client({
-    intents: [
-        Discord.GatewayIntentBits.Guilds,
-        Discord.GatewayIntentBits.GuildMembers,
-        Discord.GatewayIntentBits.GuildMessages,
-        Discord.GatewayIntentBits.MessageContent
-    ]
-});
-
-let messageCount = 0; // variable to keep track of the number of messages sent
-let hour = new Date().getHours(); // variable to keep track of the current hour
-
-// Check if the message was sent in one of the specified channels
-const channelIds = [
-    '1092283954805084200',
-    '930033193170661436',
-    '930027805398429739',
-    '930037624893231114',
-    '1094609234978668765'
-];
-
-const channelNames = [
-    'general',
-    'question us',
-    'welcome',
-    'simple',
-    'bot testing'
-];
-
-function canSendMessage(message) {
-  // Check if the member has any of the restricted roles
-  if (message.member.roles.cache.some(role => safeRoles.includes(role.name))) {
-    console.log('Member has restricted role');
-    return false;
-  }
-
-  // Check if the message was sent in one of the specified channels
-  if (!channelIds.includes(message.channel.id) && !channelNames.includes(message.channel.name)) {
-    console.log('Invalid channel');
-    return false;
-  }
-
-  // Check if the message count has reached the limit of 100 messages per hour
-  if (messageCount >= HOURLY_MSG_LIMIT) {
-    console.log('Reached message limit');
-    return false;
-  }
-
-  // All checks passed
-  return true;
-}
-
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}`);
-});
-
-// Define an array of possible welcome messages with different rarities
-const welcomeMessages = [
-  "Welcome to Huge Fungi Huggers, {member}! We're so glad you're here.", // 1
-  "Hey {member}, welcome to the server! Enjoy all the free wood here.", // 2
-  "Greetings, {member}! Enjoy your time collecting shroomlights here.", // 3
-  "Howdy {member}! We hope you brought spare nylium.", // 4
-  "Hello {member}, welcome to the other tree server! How's your day going?", // 5
-  "Welcome, {member}! Hope you find what you're looking for here! (I really don't know how you couldn't)", // 6
-  "Howdy {member}, did you know {archive} has all the nether tree farms you could dream of?", // 7
-  "Yo, {member}! Welcome to the Huge Fungi Huggers server, feel free to ask if you need help with anything.", // 8
-  "Welcome to Huge Fungi Huggers, {member}! We're happy to have you here. Have a great time exploring the nether trees.", // 9
-  "Hi {member}, did you know {archive} has some awesome designs made by our community? Feel free to check them out!", // 10
-  "Yo, {member}! Welcome to Huge Fungi Huggers, where we have some of the nether tree farms around. Enjoy your stay!", // 11
-  "Welcome to the server, {member}! We hope you find everything you're looking for this side of the overworld.", // 12
-  "Greetings, {member}! Our community is always happy to welcome new members to our nether tree paradise.", // 13
-  "Welcome to Huge Fungi Huggers, {member}! Our trees may be on fire, but our community is always cool.", // 14
-  "Hey {member}, welcome to the nether tree gang! Let's chop it up and make some charcoal. Oh wait...", // 15
-  "Who’s that, hiding in the nether roots? Oh! It’s {member}. Welcome to the server.", // 16
-  "{member} has joined the server, I wonder if they know about all the schematics in {archive}...", // 17
-  "{member} just slid into some twisting vines.", // 18
-  "Welcome {member}, enjoy your stay!", // 19
-  "Happy you're here, {member}!", // 20
-  "Hey {member}, welcome aboard!", // 21
-  "Welcome to the Huge Fungi Huggers community, {member}!", // 22
-  "Hello {member}, welcome to our server!", // 23
-  "Welcome {member}, Have fun exploring {archive}.", // 24
-  "We're happy to have you, {member}!", // 25
-  "Greetings, {member}! Welcome to our server!", // 26
-  "Welcome to the server, {member}! Enjoy yourself!", // 27
-];
 
 const joinMessages = new Map(); // Create a map to store the last join message for each member
 let lastMessageIndex; // Create a variable to store the index of the last welcome message sent
 
 // Define an array of integers representing the relative rarities of each welcome message
-const messageRarities = [7, 6, 3, 3, 1, 2, 6, 4, 4, 2, 3, 3, 6, 3, 1, 2, 2, 8, 9, 5, 2, 6, 7, 3, 4, 6];
+const messageRarities = [7, 3, 3, 3, 1, 2, 3, 4, 4, 4, 3, 3, 6, 3, 1, 4, 2, 7, 7, 5, 2, 6, 7, 3, 4, 6, 5];
+const archiveChannel = '1019870085617291305'
 
 
 client.on('guildMemberAdd', (member) => {
@@ -102,10 +15,8 @@ client.on('guildMemberAdd', (member) => {
         messageIndex = weightedRandomIndex(messageRarities);
     }
 
-    const archiveChannel = '1019870085617291305'
-
     const message = welcomeMessages[messageIndex];
-    const welcomeMessage = `${message}`.replace('{member}', `<@${member.id}>`).replace('{archive}', `<#${archiveChannel}>`);
+    const welcomeMessage = `${message}`.replace('{member}', `<@${member.id}>`).replace('{archive}', `<#${archiveChannel}>`).replace('{Froge}', `<:Froge:930083494938411018>`);
     const sentMessage = member.guild.systemChannel.send(welcomeMessage);
 
     joinMessages.set(member.id, sentMessage);
@@ -152,6 +63,9 @@ client.on('messageCreate', (message) => {
         'where is the farm',
         'where is the download',
         'where is the schematic',
+        'where is the litematic',
+        'have a schematic',
+        'have a litematic',
         'where is the world',
         'fungus farm download',
         'farm download',
@@ -170,10 +84,10 @@ client.on('messageCreate', (message) => {
         'than'
     ];
 
-    const archiveChannel = message.guild.channels.cache.find(channel => channel.name === 'archive');
+    // const archiveChannel = message.guild.channels.cache.find(channel => channel.name === '📁│archive');
 
     if (triggerPhrases.some(phrase => message.content.toLowerCase().includes(phrase)) && canSendMessage(message)) {
-        message.channel.send(`Hey ${message.author}, please see ${archiveChannel} for all world downloads and schematics.`);
+        message.channel.send(`Hey ${message.author}, please see <#${archiveChannel}> for all world downloads and schematics.`);
         console.log('Sent message in response to "world download"');
         messageCount++; // increment the message count
     } else if (otherPhrases.some(phrase => message.content.toLowerCase().includes(phrase)) && canSendMessage(message) &&
@@ -184,4 +98,4 @@ client.on('messageCreate', (message) => {
     }
 });
 
-client.login('MY-TOKEN);
+client.login(MY-TOKEN);
